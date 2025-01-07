@@ -164,7 +164,7 @@ h6, .h6 {
 }
 
 p {
-  margin-top: 0;
+  margin-top: 0; 
   margin-bottom: 1rem;
 }
 
@@ -11313,7 +11313,7 @@ footer {
   padding: 10px 0 ;
   white-space: nowrap;
   width: 100%; /* Đảm bảo footer chiếm toàn bộ chiều rộng */
-  background-color: #f8f9fa; /* Màu nền footer */
+  background-color: #f8f9fa;
   bottom: -18px;
   left: 20px;
 }

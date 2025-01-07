@@ -72,7 +72,7 @@ public class HomeController : Controller
         return View(await products.ToListAsync());
     }
 
-    public IActionResult Privacy()
+    public IActionResult About()
     {
         var userName = HttpContext.Session.GetString("UserName");
         ViewData["UserName"] = userName;
