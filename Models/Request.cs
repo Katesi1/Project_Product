@@ -11,7 +11,6 @@ public class LaptopRequest
     [Display(Name = "Tiêu đề")]
     public string? Title { get; set; }
 
-    [Required(ErrorMessage = "Vui lòng nhập danh mục")]
     [Display(Name = "Danh mục")]
     public int CategoryId  { get; set; }
 

@@ -164,7 +164,7 @@ h6, .h6 {
 }
 
 p {
-  margin-top: 0; 
+  /* margin-top: 0; */
   margin-bottom: 1rem;
 }
 
@@ -245,8 +245,9 @@ sup {
 }
 
 a {
-  color: var(--bs-link-color);
-  text-decoration: underline;
+  /* color: var(--bs-link-color); */
+  color: #2d3436;
+  text-decoration: none;
 }
 a:hover {
   color: var(--bs-link-hover-color);

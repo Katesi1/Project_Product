@@ -1,92 +1,105 @@
 @model IEnumerable<dynamic>
 <div class="container">
-@{
-    ViewData["Title"] = "Giỏ hàng của bạn";
-}
+    @{
+        ViewData["Title"] = "Giỏ hàng của bạn";
+    }
 
-<h1>@ViewData["Title"]</h1>
-@if (TempData["Message"] != null)
-{
-    <div class="alert alert-warning" role="alert">
-        @TempData["Message"]
-        @if (TempData["ShowLoginModal"] != null && (bool)TempData["ShowLoginModal"]!)
-        {
-            <br />
-            <a asp-action="Login" asp-controller="Home" class="btn btn-primary mt-2">Đăng nhập ngay</a>
-        }
-    </div>
-}
-@if (!Model.Any())
-{
-    <p>Giỏ hàng của bạn đang trống.</p>
-}
-else
-{
-    <form asp-action="Checkout" method="post">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Hình ảnh</th>
-                    <th>Tên sản phẩm</th>
-                    <th>Số lượng mua</th>
-                    <th>Giá</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        <td><img src="@item.Product.ImageUrl" alt="@item.Product.Title" style="max-width: 100px;" /></td>
-                        <td>@item.Product.Title</td>
-                        <td>
-                            <div class="quantity-control">
-                                <button type="button" class="btn btn-outline-secondary btn-decrease"
-                                    onclick="decreaseQuantity(@item.Product.Id)">-</button>
-                                <input type="number" id="quantity-@item.Product.Id" name="quantities[@item.Product.Id]"
-                                    value="@item.Quantity" min="1" max="@item.Product.Quantity"
-                                    class="form-control quantity-input" onchange="updateQuantity(@item.Product.Id)" />
-                                <button type="button" class="btn btn-outline-secondary btn-increase"
-                                    onclick="increaseQuantity(@item.Product.Id)">+</button>
-                            </div>
-                        </td>
-
-                        <td>$@item.Product.Price</td>
-                        <td>
-                            <a asp-action="RemoveFromCart" asp-route-id="@item.Product.Id" class="btn btn-danger">Xóa</a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-        <div class="checkout-container">
-            <form  asp-controller="Cart" asp-action="Checkout" method="post">
-                <button type="submit" class="btn btn-success btn-checkout">Đặt Hàng</button>
-            </form>
+    <h1>@ViewData["Title"]</h1>
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-warning" role="alert">
+            @TempData["Message"]
+            @if (TempData["ShowLoginModal"] != null && (bool)TempData["ShowLoginModal"]!)
+            {
+                <br />
+                <a asp-action="Login" asp-controller="Home" class="btn btn-primary mt-2">Đăng nhập ngay</a>
+            }
         </div>
-    </form>
-}
-<!-- Modal Thông Báo -->
-@if (TempData["ShowLoginModal"] != null && (bool)TempData["ShowLoginModal"]!)
-{
-    <div class="modal" id="loginModal" tabindex="-1" role="dialog" style="display:block; background:rgba(0,0,0,0.5);">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Yêu cầu đăng nhập</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeModal()">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>Bạn cần đăng nhập để tiếp tục đặt hàng.</p>
-                </div>
-                <div class="modal-footer">
-                    <a asp-action="Login" asp-controller="Home" class="btn btn-primary">Đăng nhập</a>
-                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Hủy</button>
+    }
+    @if (!Model.Any())
+    {
+        <p>Giỏ hàng của bạn đang trống.</p>
+    }
+    else
+    {
+        <form asp-action="Checkout" method="post">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Hình ảnh</th>
+                        <th>Tên sản phẩm</th>
+                        <th>Số lượng mua</th>
+                        <th>Giá</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model!)
+                    {
+                        if (item.Product != null)
+                        {
+                            <tr>
+                                @* <td><img src="@item.Product.ImageUrl" alt="@item.Product.Title" style="max-width: 100px;" /></td> *@
+                                <td>
+                                     @if (!string.IsNullOrEmpty(item.Product.ImageUrl))
+                                    {
+                                        <img src="@item.Product.ImageUrl" alt="@item.Product.Title" style="max-width: 100px;" />
+                                    }
+                                    else
+                                    {
+                                        <span>Không có ảnh</span>
+                                    }
+                                </td>
+                                <td>@item.Product.Title</td>
+                                <td>
+                                    <div class="quantity-control">
+                                        <button type="button" class="btn btn-outline-secondary btn-decrease"
+                                            onclick="decreaseQuantity(@item.Product.Id)">-</button>
+                                        <input type="number" id="quantity-@item.Product.Id" name="quantities[@item.Product.Id]"
+                                            value="@item.Quantity" min="1" max="@item.Product.Quantity"
+                                            class="form-control quantity-input" onchange="updateQuantity(@item.Product.Id)" />
+                                        <button type="button" class="btn btn-outline-secondary btn-increase"
+                                            onclick="increaseQuantity(@item.Product.Id)">+</button>
+                                    </div>
+                                </td>
+                                <td>@item.Product.FormattedPrice</td>
+                                <td>
+                                    <a asp-action="RemoveFromCart" asp-route-id="@item.Product.Id" class="btn btn-danger">Xóa</a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+            @* <p><strong>Tổng tiền:</strong> @ViewData["TotalPrice"]</p> *@
+            <div class="checkout-container">
+                <form asp-controller="Cart" asp-action="Checkout" method="post">
+                    <button type="submit" class="btn btn-success btn-checkout">Đặt Hàng</button>
+                </form>
+            </div>
+        </form>
+    }
+    <!-- Modal Thông Báo -->
+    @if (TempData["ShowLoginModal"] != null && (bool)TempData["ShowLoginModal"]!)
+    {
+        <div class="modal" id="loginModal" tabindex="-1" role="dialog" style="display:block; background:rgba(0,0,0,0.5);">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Yêu cầu đăng nhập</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeModal()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Bạn cần đăng nhập để tiếp tục đặt hàng.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <a asp-action="Login" asp-controller="Home" class="btn btn-primary">Đăng nhập</a>
+                        <button type="button" class="btn btn-secondary" onclick="closeModal()">Hủy</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-}
+    }
 </div>

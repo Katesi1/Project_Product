@@ -1,4 +1,4 @@
-@model IEnumerable<MvcLaptop.Models.LaptopViewModel>
+@model PaginatedList<MvcLaptop.Models.LaptopViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -6,9 +6,11 @@
 
 <div class="container-fluid">
     <h1 class="mt-4">Danh sách sản phẩm</h1>
-    <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0" style="float: right" asp-area="Admin" asp-controller="Laptops" asp-action="Index" method="get">
+    <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0" style="float: right"
+        asp-area="Admin" asp-controller="Laptops" asp-action="Index" method="get">
         <div class="input-group">
-            <input class="form-control" type="text" name="searchString" value="@ViewData["SearchString"]" placeholder="Tên máy" />
+            <input class="form-control" type="text" name="searchString" value="@ViewData["SearchString"]"
+                placeholder="Tên máy" />
             <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
         </div>
     </form>
@@ -17,13 +19,16 @@
     </p>
     <div class="table-responsive">
         <table class="table table-striped" border="1">
-            <thead class="text-center">
+            <thead class="text-left">
                 <tr>
-                    <th>@Html.DisplayNameFor(model => model.Title)</th>
-                    <th>@Html.DisplayNameFor(model => model.CategoryId)</th>
-                    <th>@Html.DisplayNameFor(model => model.Quantity)</th>
-                    <th>@Html.DisplayNameFor(model => model.Price)</th>
-                    <th>@Html.DisplayNameFor(model => model.ImageUrl)</th>
+                    <th><a asp-route-sortOrder="@ViewData["NameSortParm"]">@Html.DisplayNameFor(model =>
+                            model.First().Title)</a></th>
+                    <th>@Html.DisplayNameFor(model => model.First().CategoryId)</th>
+                    <th><a asp-route-sortOrder="@ViewData["QuantitySortParm"]">@Html.DisplayNameFor(model =>
+                            model.First().Quantity)</a></th>
+                    <th><a asp-route-sortOrder="@ViewData["PriceSortParm"]">@Html.DisplayNameFor(model =>
+                            model.First().Price)</a></th>
+                    <th>@Html.DisplayNameFor(model => model.First().ImageUrl)</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -34,7 +39,7 @@
                         <td>@Html.DisplayFor(modelItem => item.Title)</td>
                         <td>@Html.DisplayFor(modelItem => item.CategoryId)</td>
                         <td>@Html.DisplayFor(modelItem => item.Quantity)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Price)</td>
+                        <td>@Html.DisplayFor(modelItem => item.FormattedPrice)</td>
                         @* <td><img src="@item.ImageUrl" alt="@item.Title" style="max-width: 100px;" /></td> *@
                         <td>
                             @if (!string.IsNullOrEmpty(item.ImageUrl))
@@ -58,4 +63,31 @@
             </tbody>
         </table>
     </div>
+    <!-- Điều hướng phân trang -->
+    @{
+        var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+        var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+    }
+    <div class="pagination-container">
+        <a asp-action="Index" asp-route-sortOrder="@ViewData["CurrentSort"]"
+            asp-route-pageNumber="@(Model.PageIndex - 1)" asp-route-currentFilter="@ViewData["CurrentFilter"]"
+            class="btn btn-default @prevDisabled">
+            Trước
+        </a>
+        <a asp-action="Index" asp-route-sortOrder="@ViewData["CurrentSort"]"
+            asp-route-pageNumber="@(Model.PageIndex + 1)" asp-route-currentFilter="@ViewData["CurrentFilter"]"
+            class="btn btn-default @nextDisabled">
+            Tiếp
+        </a>
+    </div>
 </div>
+<style>
+    .pagination-container {
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    .pagination-container .btn {
+        margin: 0 5px;
+    }
+</style>

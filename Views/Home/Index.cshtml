@@ -40,10 +40,10 @@
             <div class="hot-new-card">
                 <a asp-action="Details" asp-route-id="@item.Id" class="hot-new-link">
                     @* <img src="@item.ProductImages!.FirstOrDefault(img => img.IsMainImage)?.ImageUrl ?? Url.Content("~/images/default.jpg")" alt="@item.Title" class="hot-new-image" /> *@
-                    <img src="@item.ProductImages!.FirstOrDefault(img => img.IsMainImage)?.ImageUrl" alt="@item.Title" class="hot-new-image" />
+                    <img src="@item.ProductImages!.FirstOrDefault(img => img.IsMainImage)?.ImageUrl" alt="@item.Title" class="hot-new-image" onerror="this.onerror=null; this.src='@Url.Content("~/images/default.jpg")'; this.classList.add('hot-new-image');"/>
                     <div class="hot-new-info">
                         <h3 class="hot-new-title">@item.Title</h3>
-                        <p class="hot-new-price">$@item.Price</p>
+                        <p class="hot-new-price">@item.FormattedPrice</p>
                     </div>
                 </a>
             </div>

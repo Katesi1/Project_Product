@@ -22,7 +22,7 @@ public class LaptopViewModel
 
     [Display(Name = "Số lượng")]
     public int Quantity { get; set; }
-    
+
     [DataType(DataType.Currency)]
     [Display(Name = "Giá")]
     public decimal Price { get; set; }
@@ -41,6 +41,14 @@ public class LaptopViewModel
 
     [Display(Name = "Hình ảnh chính")]
     public bool IsMainImage { get; set; }
+}
+public class CartProductViewModel
+{
+    [Display(Name = "Sản phẩm")]
+    public LaptopViewModel Product { get; set; } = new LaptopViewModel();
+
+    [Display(Name = "Số lượng")]
+    public int Quantity { get; set; }
 }
 public class OrderViewModel
 {

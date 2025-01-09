@@ -35,12 +35,12 @@
             </div>
             <div class="form-group">
                 <label asp-for="Price" class="control-label"></label>
-                <input asp-for="Price" class="form-control" />
+                <input asp-for="Price" class="form-control" value="@Model.Price.ToString("#,0")"/>
                 <span asp-validation-for="Price" class="text-danger"></span>
             </div>
             <!-- Hiển thị ảnh cũ -->
             <div class="form-group">
-                <label>Current Image</label>
+                <label>Current Image</label><br />
                 @if (!string.IsNullOrEmpty(Model.ImageUrl))
                 {
                     <div  class="image-frame">
@@ -58,7 +58,7 @@
                 <label for="MainImage">Upload New Image</label>
                 <input type="file" name="MainImage" id="MainImage" class="form-control" />
             </div>
-
+            <br />
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>

@@ -15,7 +15,7 @@
         @foreach (var item in Model)
         {
             <a asp-action="Details" asp-route-id="@item.Id" class="product-card">
-                <img src="@item.ProductImages!.FirstOrDefault(img => img.IsMainImage)?.ImageUrl" alt="@item.Title" class="product-image" />
+                <img src="@item.ProductImages!.FirstOrDefault(img => img.IsMainImage)?.ImageUrl" alt="@item.Title" onerror="this.onerror=null; this.src='@Url.Content("~/images/default.jpg")'; this.classList.add('product-image');" class="product-image"/>
                 <h3 class="product-title">@item.Title</h3>
                 <p class="product-genre">@item.Category?.Name_Category</p>
                 <p class="product-price">@item.FormattedPrice</p>

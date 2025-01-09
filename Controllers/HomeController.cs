@@ -82,7 +82,10 @@ public class HomeController : Controller
     {
         var userName = HttpContext.Session.GetString("UserName");
         ViewData["UserName"] = userName;
-        var laptop = _context.Product.FirstOrDefault(l => l.Id == id);
+        var laptop = _context.Product
+            .Include(l => l.ProductImages) // Nạp danh sách ảnh
+            .Include(l => l.Category) // Nạp danh mục
+            .FirstOrDefault(l => l.Id == id);
         if (laptop == null)
         {
             return NotFound();
@@ -92,6 +95,12 @@ public class HomeController : Controller
             .OrderBy(c => c.Name_Category)
             .ToList();
         return View(laptop);
+    }
+    public IActionResult About()
+    {
+        var userName = HttpContext.Session.GetString("UserName");
+        ViewData["UserName"] = userName;
+        return View();
     }
     // Action trả về danh sách Genre
     public IActionResult PartialGenres()
