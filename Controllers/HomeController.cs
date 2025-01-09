@@ -44,7 +44,7 @@ public class HomeController : Controller
         ViewData["SearchString"] = searchString;
         return View(await products.ToListAsync());
     }
-    public async Task<IActionResult> Product(int? categoryId, string searchString)
+    public async Task<IActionResult> Product(int? categoryId, string searchString, string sortOrder ,string currentFilter, int? pageNumber)
     {
         var userName = HttpContext.Session.GetString("UserName");
         ViewData["UserName"] = userName;
@@ -54,8 +54,15 @@ public class HomeController : Controller
           var products = _context.Product
           .Include(p => p.ProductImages)
           .Include(p => p.Category)
-          .AsQueryable();
-
+          .AsQueryable(); 
+        if (searchString != null)
+        {
+             pageNumber = 1;
+        }
+        else
+        {
+            searchString = currentFilter;
+        }
         if (categoryId.HasValue)
         {
             products = products.Where(p => p.CategoryId == categoryId.Value);
@@ -65,11 +72,11 @@ public class HomeController : Controller
         {
             products = products.Where(p => p.Title!.ToUpper().Contains(searchString.ToUpper()));
         }
-
+        int pageSize = 10;
         ViewData["CurrentCategory"] = categoryId;
         ViewData["SearchString"] = searchString;
-
-        return View(await products.ToListAsync());
+        ViewData["CurrentSort"] = sortOrder;
+        return View(await PaginatedList<Product>.CreateAsync(products.AsNoTracking(), pageNumber ?? 1, pageSize));
     }
 
     public IActionResult About()
@@ -96,13 +103,6 @@ public class HomeController : Controller
             .ToList();
         return View(laptop);
     }
-    public IActionResult About()
-    {
-        var userName = HttpContext.Session.GetString("UserName");
-        ViewData["UserName"] = userName;
-        return View();
-    }
-    // Action trả về danh sách Genre
     public IActionResult PartialGenres()
     {
         var categories = _context.Category!
@@ -138,7 +138,7 @@ public class HomeController : Controller
         }
 
         // Lưu thông tin người dùng vào session
-        HttpContext.Session.SetString("UserName", user.UserName);
+        HttpContext.Session.SetString("UserName", user.UserName!);
 
         return RedirectToAction(nameof(Index));
     }

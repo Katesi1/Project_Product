@@ -1,4 +1,4 @@
-@model IEnumerable<MvcLaptop.Models.Product>
+@model PaginatedList<MvcLaptop.Models.Product>
 @{
     ViewData["Title"] = "Product";
 }
@@ -22,4 +22,77 @@
             </a>
         }
     </div>
+<div style="margin-top: 10px;">
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            <!-- Nút "Trước" -->
+            <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
+                <a class="page-link" asp-action="Product"
+                   asp-route-sortOrder="@ViewData["CurrentSort"]"
+                   asp-route-pageNumber="@(Model.PageIndex - 1)"
+                   asp-route-currentFilter="@ViewData["SearchString"]">
+                    <b><</b>
+                </a>
+            </li>
+
+            <!-- Số trang -->
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.PageIndex ? "active" : "")">
+                    <a class="page-link" asp-action="Product"
+                       asp-route-sortOrder="@ViewData["CurrentSort"]"
+                       asp-route-pageNumber="@i"
+                       asp-route-currentFilter="@ViewData["SearchString"]">
+                        @i
+                    </a>
+                </li>
+            }
+
+            <!-- Nút "Sau" -->
+            <li class="page-item @(Model.HasNextPage ? "" : "disabled")">
+                <a class="page-link" asp-action="Product"
+                   asp-route-sortOrder="@ViewData["CurrentSort"]"
+                   asp-route-pageNumber="@(Model.PageIndex + 1)"
+                   asp-route-currentFilter="@ViewData["SearchString"]">
+                    <b>></b>
+                </a>
+            </li>
+        </ul>
+    </nav>
 </div>
+
+</div>
+<style>
+    .pagination {
+    display: flex; /* Hiển thị các số trang theo hàng ngang */
+    justify-content: center;
+    list-style: none; /* Loại bỏ dấu chấm mặc định của <li> */
+    padding: 0;
+    margin: 0;
+}
+
+.page-item {
+    margin: 0 5px; /* Khoảng cách giữa các số trang */
+}
+
+.page-item .page-link {
+    text-decoration: none; /* Loại bỏ gạch chân */
+    padding: 8px 12px;
+    color: #000000;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.page-item.active .page-link {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.page-item.disabled .page-link {
+    pointer-events: none; /* Vô hiệu hóa nút */
+    opacity: 0.6;
+    background-color: #f8f9fa;
+    color: #6c757d;
+}
+</style>
