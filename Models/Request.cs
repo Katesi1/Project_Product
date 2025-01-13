@@ -15,6 +15,7 @@ public class LaptopRequest
     public int CategoryId { get; set; }
 
     [Display(Name = "Tên danh mục")]
+    [StringLength(100, ErrorMessage = "Tên danh mục không được vượt quá 100 ký tự.")]
     public string? Name_Category { get; set; }
 
     [StringLength(20000, MinimumLength = 10, ErrorMessage = "Mô tả phải từ 10 đến 20000 ký tự")]

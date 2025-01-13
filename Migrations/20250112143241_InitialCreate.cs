@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace MvcLaptop.Data.Migrations
+namespace MvcLaptop.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration

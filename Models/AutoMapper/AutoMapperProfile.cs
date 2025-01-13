@@ -11,5 +11,6 @@ public class AutoMapperProfile : Profile
         .ForMember(dest => dest.Name_Category, opt => opt.MapFrom(src => 
             src.Category != null ? src.Category.Name_Category : "Unknown")).ReverseMap();
         CreateMap<LaptopRequest, Product>();
+        CreateMap<LaptopRequest, Category>();
     }
 }

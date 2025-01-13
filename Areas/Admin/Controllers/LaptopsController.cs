@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace MvcLaptop.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles ="Admin,Staff")]
+    [Authorize(Roles ="Administrator,Manager")]
     public class LaptopsController : Controller
     {
         private readonly ILaptopService _laptopService;
@@ -85,8 +85,19 @@ namespace MvcLaptop.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var result = await _laptopService.Create(request, MainImage);
-                if (result == null)
+                if (result != null) {
+                    ViewBag.SuccessMessage = "Sản phẩm đã được tạo thành công!";
+                }
                     return RedirectToAction(nameof(Index));
+                    
+            }
+             foreach (var modelStateKey in ModelState.Keys)
+            {
+                var modelStateVal = ModelState[modelStateKey];
+                foreach (var error in modelStateVal!.Errors)
+                {
+                    Console.WriteLine($"Key: {modelStateKey}, Error: {error.ErrorMessage}");
+                }
             }
             ViewBag.Categories = new SelectList(await _laptopService.GetCategories(), "CategoryId", "Name_Category", request.CategoryId);
             return View(request);
@@ -158,6 +169,62 @@ namespace MvcLaptop.Areas.Admin.Controllers
         {
             await _laptopService.Delete(id);
             return RedirectToAction(nameof(Index));
+        }
+        public async Task<IActionResult> Category(string sortOrder, string currentFilter, string searchString, int? pageNumber)
+        {
+            var userName = HttpContext.Session.GetString("UserName");
+            ViewData["UserName"] = userName;
+            ViewData["SearchString"] = searchString;
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+            ViewData["CurrentFilter"] = searchString;
+            // Lấy danh sách laptop
+            return View(await _laptopService.GetCategory(sortOrder, currentFilter, searchString, pageNumber));
+        }
+        public IActionResult Create_cate()
+        {
+            var userName = HttpContext.Session.GetString("UserName");
+            ViewData["UserName"] = userName;
+            ViewBag.SuccessMessage = null;
+            return View(new LaptopRequest());
+            // ViewBag.Categories = new SelectList(await _laptopService.GetCategories(), "CategoryId", "Name_Category");
+            // return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create_cate(Category request)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _laptopService.Create_cate(request);
+                if (result != null)
+                {
+                    ViewBag.SuccessMessage = "Danh mục đã được tạo thành công.";
+                    return RedirectToAction(nameof(Category));
+                }
+
+                ViewBag.ErrorMessage = "Đã xảy ra lỗi khi tạo danh mục. Vui lòng thử lại.";
+            }
+
+            // Ghi log lỗi để kiểm tra ModelState
+            foreach (var modelStateKey in ModelState.Keys)
+            {
+                var modelStateVal = ModelState[modelStateKey];
+                foreach (var error in modelStateVal!.Errors)
+                {
+                    Console.WriteLine($"Key: {modelStateKey}, Error: {error.ErrorMessage}");
+                }
+            }
+
+            ViewBag.ErrorMessage = "Dữ liệu nhập không hợp lệ.";
+            return View(request);
         }
     }
 }

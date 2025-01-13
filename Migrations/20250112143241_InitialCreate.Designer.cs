@@ -8,10 +8,10 @@ using MvcLaptop.Data;
 
 #nullable disable
 
-namespace MvcLaptop.Data.Migrations
+namespace MvcLaptop.Migrations
 {
     [DbContext(typeof(MvcLaptopContext))]
-    [Migration("20250111170120_InitialCreate")]
+    [Migration("20250112143241_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

@@ -96,10 +96,10 @@ public class LaptopService : ILaptopService
                 laptops = laptops.OrderByDescending(p => p.Title);
                 break;
             case "Price":
-                laptops = laptops.OrderBy(p => p.Price);
+                laptops = laptops.OrderBy(p => (double)p.Price);
                 break;
             case "price_desc":
-                laptops = laptops.OrderByDescending(p => p.Price);
+                laptops = laptops.OrderByDescending(p => (double)p.Price);
                 break;
             case "Quantity":
                 laptops = laptops.OrderBy(p => p.Quantity);
@@ -131,7 +131,56 @@ public class LaptopService : ILaptopService
     {
         return _context.Product.Any(e => e.Id == id);
     }
-
+    public async Task<Category> Create_cate(Category request)
+    {
+        try
+        {
+            var cate = _mapper.Map<Category>(request);
+            _context.Add(cate);
+            await _context.SaveChangesAsync();
+            return cate;
+        }
+        catch (Exception ex)
+        {
+            // Ghi log lỗi
+            Console.WriteLine($"Lỗi khi tạo danh mục: {ex.Message}");
+            return null!;
+        }
+    }
+    public async Task<IEnumerable<Category>> GetCategory(string? sortOrder = null, string? currentFilter = null, string? searchString = null, int? pageNumber = null, int pageSize = 3)
+    {
+        var laptops = from p in _context.Category!
+                        .Include(p => p.Products)
+                      select p;
+        // Lọc theo từ khóa tìm kiếm nếu có
+        if (!string.IsNullOrEmpty(searchString))
+        {
+            laptops = laptops.Where(p => p.Name_Category != null &&
+                                        p.Name_Category.ToUpper().Contains(searchString.ToUpper()));
+        }
+        //Sắp xếp
+        switch (sortOrder)
+        {
+            case "name_desc":
+                laptops = laptops.OrderByDescending(p => p.Name_Category);
+                break;
+            // case "Quantity_desc":
+            //     laptops = laptops.OrderByDescending(p => p.Quantity);
+            //     break;
+            default:
+                laptops = laptops.OrderBy(p => p.Name_Category);
+                break;
+        }
+        // Chuyển đổi sang ViewModel
+        return await PaginatedList<Category>.CreateAsync(
+            laptops.Select(p => new Category
+            {
+                CategoryId = p.CategoryId,
+                Name_Category = p.Name_Category,
+            }),
+        pageNumber ?? 1,
+        pageSize);
+    }
     public async Task<bool> Update(int id, LaptopViewModel laptop, IFormFile? MainImage)
     {
         var product = await _context.Product

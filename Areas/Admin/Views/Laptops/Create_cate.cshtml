@@ -1,0 +1,50 @@
+@model MvcLaptop.Models.LaptopRequest
+
+@{
+    ViewData["Title"] = "Create Category";
+}
+
+<h1>Create</h1>
+
+<h4>Category</h4>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        @if (ViewBag.SuccessMessage != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                @ViewBag.SuccessMessage
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        @if (ViewBag.ErrorMessage != null)
+        {
+            <div class="alert alert-danger">
+                @ViewBag.ErrorMessage
+            </div>
+        }
+
+        <form asp-action="Create_cate" enctype="multipart/form-data" method="post">
+            <div class="form-group">
+                <label asp-for="Name_Category" class="control-label"></label>
+                <input asp-for="Name_Category" class="form-control" />
+                <span asp-validation-for="Name_Category" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Create</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Category">Back to List</a>
+</div>
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        Vui lòng kiểm tra lại các trường thông tin.
+    </div>
+}

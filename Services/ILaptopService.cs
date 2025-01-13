@@ -11,6 +11,8 @@ public interface ILaptopService
     Task<bool> Delete(int id);
     Task<IEnumerable<Category>> GetCategories();
     bool LaptopExists(int id);
+    Task<IEnumerable<Category>> GetCategory(string? sortOrder = null,string? currentFilter = null,string? searchString = null,int? pageNumber = null,int pageSize = 3);
+    Task<Category> Create_cate(Category request);
 }
 public interface ICartService
 {

@@ -7,7 +7,7 @@ using MvcLaptop.Data;
 
 #nullable disable
 
-namespace MvcLaptop.Data.Migrations
+namespace MvcLaptop.Migrations
 {
     [DbContext(typeof(MvcLaptopContext))]
     partial class MvcLaptopContextModelSnapshot : ModelSnapshot

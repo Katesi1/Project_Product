@@ -1,13 +1,12 @@
-@model PaginatedList<MvcLaptop.Models.LaptopViewModel>
+@model PaginatedList<MvcLaptop.Models.Category>
 
 @{
     ViewData["Title"] = "Index";
 }
-
 <div class="container-fluid">
-    <h1 class="mt-4">Danh sách sản phẩm</h1>
+    <h1 class="mt-4">Danh sách hãng sản phẩm</h1>
     <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0" style="float: right"
-        asp-area="Admin" asp-controller="Laptops" asp-action="Index" method="get">
+        asp-area="Admin" asp-controller="Laptops" asp-action="Category" method="get">
         <div class="input-group">
             <input class="form-control" type="text" name="searchString" value="@ViewData["SearchString"]"
                 placeholder="Tên máy" />
@@ -15,20 +14,17 @@
         </div>
     </form>
     <p>
-        <a asp-action="Create" class="btn btn-primary">Create New</a>
+        <a asp-action="Create_cate" class="btn btn-primary">Create New</a>
     </p>
     <div class="table-responsive">
         <table class="table table-striped" border="1">
             <thead class="text-left">
                 <tr>
                     <th><a asp-route-sortOrder="@ViewData["NameSortParm"]">@Html.DisplayNameFor(model =>
-                            model.First().Title)</a></th>
+                            model.First().CategoryId)</a></th>
                     <th>@Html.DisplayNameFor(model => model.First().Name_Category)</th>
-                    <th><a asp-route-sortOrder="@ViewData["QuantitySortParm"]">@Html.DisplayNameFor(model =>
-                            model.First().Quantity)</a></th>
-                    <th><a asp-route-sortOrder="@ViewData["PriceSortParm"]">@Html.DisplayNameFor(model =>
-                            model.First().Price)</a></th>
-                    <th>@Html.DisplayNameFor(model => model.First().ImageUrl)</th>
+                    @* <th><a asp-route-sortOrder="@ViewData["QuantitySortParm"]">@Html.DisplayNameFor(model =>
+                            model.First().Quantity)</a></th> *@
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -36,26 +32,14 @@
                 @foreach (var item in Model)
                 {
                     <tr>
-                        <td>@Html.DisplayFor(modelItem => item.Title)</td>
+                        <td>@Html.DisplayFor(modelItem => item.CategoryId)</td>
                         <td>@Html.DisplayFor(modelItem => item.Name_Category)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Quantity)</td>
-                        <td>@Html.DisplayFor(modelItem => item.FormattedPrice)</td>
-                        @* <td><img src="@item.ImageUrl" alt="@item.Title" style="max-width: 100px;" /></td> *@
-                        <td>
-                            @if (!string.IsNullOrEmpty(item.ImageUrl))
-                            {
-                                <img src="@item.ImageUrl" alt="@item.Title" style="max-width: 100px; height: auto;" />
-                            }
-                            else
-                            {
-                                <span>Không có ảnh</span>
-                            }
-                        </td>
+                        @* <td>@Html.DisplayFor(modelItem => item.Quantity)</td> *@
                         <td>
                             <div class="action-buttons">
-                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-edit">Edit</a> |
-                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-details">Details</a> |
-                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-delete">Delete</a>
+                                <a asp-action="Edit" asp-route-id="@item.CategoryId" class="btn btn-edit">Edit</a> |
+                                <a asp-action="Details" asp-route-id="@item.CategoryId" class="btn btn-details">Details</a> |
+                                <a asp-action="Delete" asp-route-id="@item.CategoryId" class="btn btn-delete">Delete</a>
                             </div>
                         </td>
                     </tr>
