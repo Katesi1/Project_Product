@@ -16,7 +16,7 @@ public class Product
     public int Quantity { get; set; }
 
     [DataType(DataType.Currency)]
-    [Column(TypeName = "decimal(18, 2)")]
+    [Column(TypeName = "decimal(18, 0)")]
     public decimal Price { get; set; }
      // Thuộc tính chỉ hiển thị định dạng giá tiền
     [NotMapped]

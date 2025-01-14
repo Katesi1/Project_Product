@@ -7,7 +7,7 @@ using MvcLaptop.Data;
 
 #nullable disable
 
-namespace MvcLaptop.Data.Migrations
+namespace MvcLaptop.Migrations
 {
     [DbContext(typeof(MvcLaptopContext))]
     partial class MvcLaptopContextModelSnapshot : ModelSnapshot
@@ -130,7 +130,6 @@ namespace MvcLaptop.Data.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(500)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name_Category")
@@ -214,8 +213,11 @@ namespace MvcLaptop.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Status")
+                        .HasColumnType("TEXT");
+
                     b.Property<decimal>("TotalPrice")
-                        .HasColumnType("decimal(18, 2)");
+                        .HasColumnType("decimal(18, 0)");
 
                     b.Property<string>("UserId")
                         .HasColumnType("TEXT");
@@ -263,7 +265,7 @@ namespace MvcLaptop.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18, 2)");
+                        .HasColumnType("decimal(18, 0)");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("INTEGER");

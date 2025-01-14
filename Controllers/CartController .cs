@@ -74,9 +74,13 @@ namespace MvcLaptop.Controllers
         [HttpPost]
         public async Task<IActionResult> Checkout(Dictionary<int, int> quantities)
         {
+             var userName = User.Identity!.Name;
             // var cartItems = _cartService.GetCartFromSession();
-            var userName = HttpContext.Session.GetString("UserName");
-            ViewData["UserName"] = userName;
+            if (User.Identity.IsAuthenticated)
+            {
+                // Gán thông tin vào ViewData
+                ViewData["UserName"] = userName;
+            }
             if (string.IsNullOrEmpty(userName))
             {
                 TempData["Message"] = "Bạn cần đăng nhập để tiếp tục đặt hàng.";
@@ -116,56 +120,49 @@ namespace MvcLaptop.Controllers
             return View(new Order());
         }
         [HttpPost]
-        public async Task<IActionResult> ProcessCheckout(Order order)
-        {
-            // var cartItems = _cartService.GetCartFromSession();
+public async Task<IActionResult> ProcessCheckout(Order order, string paymentMethod)
+{
+    var userName = HttpContext.Session.GetString("UserName");
+    var email = HttpContext.Session.GetString("Email");
+    var userId = HttpContext.Session.GetInt32("UserId");
 
-            // if (!cartItems.Any())
-            // {
-            //     TempData["Error"] = "Giỏ hàng của bạn trống.";
-            //     return RedirectToAction("Index");
-            // }
-            // var userName = HttpContext.Session.GetString("UserName");
-            // var email = HttpContext.Session.GetString("Email");
+    if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(email) || userId == null)
+    {
+        TempData["Error"] = "Bạn cần đăng nhập để tiếp tục đặt hàng.";
+        return RedirectToAction("Index");
+    }
 
-            // // Kiểm tra nếu người dùng chưa đăng nhập
-            // if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(email))
-            // {
-            //     TempData["Error"] = "Bạn cần đăng nhập để tiếp tục đặt hàng.";
-            //     return RedirectToAction("Index");
-            // }
-            // await _cartService.ProcessOrderAsync(order, cartItems, userName, email);
+    // Kiểm tra số lượng sản phẩm trong kho
+    var cartItems = _cartService.GetCartFromSession();
+    var isStockAvailable = await _cartService.CheckProductStockAsync(cartItems);
+    if (!isStockAvailable)
+    {
+        TempData["Error"] = "Một số sản phẩm không đủ số lượng trong kho!";
+        return RedirectToAction("Index");
+    }
 
-            // // Xóa giỏ hàng sau khi đặt hàng
-            // HttpContext.Session.Remove("CartItems");
+    // Xử lý thông tin đơn hàng
+    order.UserId = userId.ToString();
+    order.OrderDate = DateTime.Now;
+    order.TotalPrice = _cartService.CalculateTotalPrice(cartItems);
 
-            // TempData["Message"] = "Đơn hàng của bạn đã được ghi nhận!";
-            // return RedirectToAction("Confirmation");
-            try
-            {
-                // Lấy thông tin người dùng từ session
-                var userName = HttpContext.Session.GetString("UserName");
-                var email = HttpContext.Session.GetString("Email");
-                var userId = HttpContext.Session.GetInt32("UserId");
+    // Kiểm tra phương thức thanh toán
+    if (paymentMethod == "Payment") 
+    {
+        // Chuyển hướng đến trang thanh toán (Pay)
+        return RedirectToAction("Pay", new { orderId = order.Id });
+    }
+    else if (paymentMethod == "COD") 
+    {
+        // Lưu đơn hàng vào database và chuyển đến trang xác nhận thanh toán
+        await _cartService.ProcessCheckoutAsync(order, userName, email, (int)userId);
+        TempData["Message"] = "Đơn hàng của bạn đã được ghi nhận và sẽ giao tận nơi.";
+        return RedirectToAction("Confirmation");
+    }
 
-                if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(email) || userId == null)
-                {
-                    TempData["Error"] = "Bạn cần đăng nhập để tiếp tục đặt hàng.";
-                    return RedirectToAction("Index");
-                }
+    return RedirectToAction("Index");
+}
 
-                // Xử lý thanh toán thông qua service
-                await _cartService.ProcessCheckoutAsync(order, userName, email, userId.Value.ToString());
-
-                TempData["Message"] = "Đơn hàng của bạn đã được ghi nhận!";
-                return RedirectToAction("Confirmation");
-            }
-            catch (Exception ex)
-            {
-                TempData["Error"] = $"Có lỗi xảy ra: {ex.Message}";
-                return RedirectToAction("Index");
-            }
-        }
 
         public IActionResult Confirmation()
         {

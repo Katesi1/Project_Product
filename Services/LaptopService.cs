@@ -333,7 +333,7 @@ public class CartService : ICartService
         // Xóa giỏ hàng
         _httpContextAccessor.HttpContext?.Session.Remove("CartItems");
     }
-    public async Task<bool> ProcessCheckoutAsync(Order order, string userName, string email, string userId)
+    public async Task<bool> ProcessCheckoutAsync(Order order, string userName, string email, int userId)
     {
         var cartItems = GetCartFromSession();
 
@@ -344,7 +344,7 @@ public class CartService : ICartService
         try
         {
             // Thiết lập thông tin đơn hàng
-            order.UserId = userId;
+            order.UserId = userId.ToString();
             order.OrderDate = DateTime.Now;
             order.TotalPrice = CalculateTotalPrice(cartItems);
 

@@ -29,12 +29,8 @@ switch (optionDatabases)
         break;
 }
 RouteRazerPage();
-builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = false)
-    .AddRoles<Role>()
-    .AddEntityFrameworkStores<MvcLaptopContext>();
 
 builder.Services.AddControllersWithViews();
-
 builder.Services.AddDistributedMemoryCache();  // Sử dụng bộ nhớ để lưu trữ session
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSession(options =>
@@ -43,7 +39,10 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;  // Cookie chỉ có thể truy cập từ server
     options.Cookie.IsEssential = true;  // Làm cho cookie session là cần thiết
 });
-
+builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = false)
+    .AddRoles<Role>()
+    .AddDefaultTokenProviders()
+    .AddEntityFrameworkStores<MvcLaptopContext>();
 AddScoped();
 // Đăng ký AutoMapper
 builder.Services.AddAutoMapper(typeof(Program));
@@ -86,8 +85,8 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-app.UseSession();
 app.UseRouting();
+app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
 

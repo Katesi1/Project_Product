@@ -23,9 +23,11 @@ namespace MvcLaptop.Models
         public string? PaymentMethod { get; set; }
 
         public DateTime OrderDate { get; set; }
-        
+
+        public string? Status { get; set; } = "Đang chờ";
+
         [DataType(DataType.Currency)]
-        [Column(TypeName = "decimal(18, 2)")]
+        [Column(TypeName = "decimal(18, 0)")]
         public decimal TotalPrice { get; set; }
     // Thêm khóa ngoại liên kết đến User
         [ForeignKey("User")]

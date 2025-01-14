@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace MvcLaptop.Data.Migrations
+namespace MvcLaptop.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class Update : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,7 +18,7 @@ namespace MvcLaptop.Data.Migrations
                     CategoryId = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Name_Category = table.Column<string>(type: "TEXT", nullable: true),
-                    Description = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true)
+                    Description = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -104,7 +104,7 @@ namespace MvcLaptop.Data.Migrations
                     CategoryId = table.Column<int>(type: "INTEGER", nullable: false),
                     Description = table.Column<string>(type: "TEXT", nullable: true),
                     Quantity = table.Column<int>(type: "INTEGER", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(18, 2)", nullable: false)
+                    Price = table.Column<decimal>(type: "decimal(18, 0)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -180,7 +180,8 @@ namespace MvcLaptop.Data.Migrations
                     Address = table.Column<string>(type: "TEXT", nullable: false),
                     PaymentMethod = table.Column<string>(type: "TEXT", nullable: false),
                     OrderDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    TotalPrice = table.Column<decimal>(type: "decimal(18, 2)", nullable: false),
+                    Status = table.Column<string>(type: "TEXT", nullable: true),
+                    TotalPrice = table.Column<decimal>(type: "decimal(18, 0)", nullable: false),
                     UserId = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
