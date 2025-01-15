@@ -33,5 +33,7 @@ namespace MvcLaptop.Models
         [ForeignKey("User")]
         public string?  UserId { get; set; }
         public User? User { get; set; }
+
+        public ICollection<OrderDetail> orderDetails = default!;
     }
 }

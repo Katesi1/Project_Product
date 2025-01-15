@@ -333,8 +333,12 @@ public class CartService : ICartService
         // Xóa giỏ hàng
         _httpContextAccessor.HttpContext?.Session.Remove("CartItems");
     }
-    public async Task<bool> ProcessCheckoutAsync(Order order, string userName, string email, int userId)
+    public async Task<bool> ProcessCheckoutAsync(Order order, string userName, string email)
     {
+            // Kiểm tra dữ liệu đầu vào
+        if (string.IsNullOrEmpty(order.UserId))
+        throw new InvalidOperationException("UserId không được để trống.");
+
         var cartItems = GetCartFromSession();
 
         if (!cartItems.Any())
@@ -343,11 +347,7 @@ public class CartService : ICartService
         using var transaction = await _context.Database.BeginTransactionAsync();
         try
         {
-            // Thiết lập thông tin đơn hàng
-            order.UserId = userId.ToString();
-            order.OrderDate = DateTime.Now;
-            order.TotalPrice = CalculateTotalPrice(cartItems);
-
+            Console.WriteLine($"Orders UserId: {order.UserId}");
             // Lưu đơn hàng
             _context.Orders!.Add(order);
             await _context.SaveChangesAsync();

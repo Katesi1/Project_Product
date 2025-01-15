@@ -22,5 +22,5 @@ public interface ICartService
     Task<IEnumerable<dynamic>> GetCartProductsAsync();
     Task<bool> CheckProductStockAsync(Dictionary<int, int> quantities);
     Task ProcessOrderAsync(Order order, Dictionary<int, int> cartItems, string userName, string email);
-    Task<bool> ProcessCheckoutAsync(Order order, string userName, string email, int userId);
+    Task<bool> ProcessCheckoutAsync(Order order, string userName, string email);
 }

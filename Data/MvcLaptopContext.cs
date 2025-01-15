@@ -22,6 +22,7 @@ namespace MvcLaptop.Data
         public DbSet<Function> Functions { set; get; } = default!;
         public DbSet<Command> Commands { set; get; } = default!;
         public DbSet<Permission> Permissions { set; get; } = default!;
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -40,6 +41,16 @@ namespace MvcLaptop.Data
             modelBuilder.Entity<Permission>()
                 .HasKey(c => new { c.RoleId, c.FunctionId, c.CommandId });
 
+            modelBuilder.Entity<Order>()
+            .HasOne(e => e.User)
+            .WithMany(e => e.Orders)
+            .HasForeignKey(e => e.UserId);
+
+            modelBuilder.Entity<OrderDetail>()
+            .HasOne(e => e.Order)
+            .WithMany(e => e.orderDetails)
+            .HasForeignKey(e => e.OrderId);
+
             // foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             // {
             //     var tableName = entityType.GetTableName();
@@ -49,6 +60,8 @@ namespace MvcLaptop.Data
             //     }
             // }
         }
+
+
 
     }
 }

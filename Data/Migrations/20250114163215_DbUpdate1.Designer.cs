@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MvcLaptop.Data;
 
@@ -10,9 +11,11 @@ using MvcLaptop.Data;
 namespace MvcLaptop.Migrations
 {
     [DbContext(typeof(MvcLaptopContext))]
-    partial class MvcLaptopContextModelSnapshot : ModelSnapshot
+    [Migration("20250114163215_DbUpdate1")]
+    partial class DbUpdate1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.0");
@@ -220,6 +223,7 @@ namespace MvcLaptop.Migrations
                         .HasColumnType("decimal(18, 0)");
 
                     b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -484,7 +488,9 @@ namespace MvcLaptop.Migrations
                 {
                     b.HasOne("MvcLaptop.Models.User", "User")
                         .WithMany("Orders")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });
