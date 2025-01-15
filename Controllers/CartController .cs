@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -184,10 +185,6 @@ namespace MvcLaptop.Controllers
                     };
                 // Chuyển hướng đến trang thanh toán (Pay)
                 return Redirect(_vnPayService.CreatePaymentUrl(HttpContext, vnPayModel));
-                // if()
-                // {
-
-                // }
             }
             else if (paymentMethod == "COD") 
             {
@@ -197,11 +194,55 @@ namespace MvcLaptop.Controllers
                 return RedirectToAction("Confirmation", new { orderId = order.Id });
             }
             return RedirectToAction("Index");
-            }
-                public IActionResult Confirmation(int orderId)
-                {
-                    ViewData["Message"] = TempData["Message"];
-                    return View();
-                }
-            }
         }
+        public static Dictionary<string, string> vnp_TransactionStatus = new Dictionary<string, string>()
+        {
+            {"00","Giao dịch thành công" },
+            {"01","Giao dịch chưa hoàn tất" },
+            {"02","Giao dịch bị lỗi" },
+            {"04","Giao dịch đảo (Khách hàng đã bị trừ tiền tại Ngân hàng nhưng GD chưa thành công ở VNPAY)" },
+            {"05","VNPAY đang xử lý giao dịch này (GD hoàn tiền)" },
+            {"06","VNPAY đã gửi yêu cầu hoàn tiền sang Ngân hàng (GD hoàn tiền)" },
+            {"07","Giao dịch bị nghi ngờ gian lận" },
+            {"09","GD Hoàn trả bị từ chối" }
+        };
+        // public IActionResult PaymentSuccess()
+        // {
+        //     return View();
+        // }
+
+        // public IActionResult PaymentFail()
+        // {
+        //     return View();
+        // }
+        public IActionResult PaymentCallBack()
+        {
+
+            var response = _vnPayService.PaymentExecute(Request.Query);
+            if (response.VNPayResponseCode == "00")
+            {
+                
+                // Processed successfully
+                return RedirectToAction(nameof(Confirmation));
+            }
+
+            // Get the message corresponding to VnPayResponseCode from the dictionary
+            if (vnp_TransactionStatus.TryGetValue(response.VNPayResponseCode!, out var message))
+            {
+                TempData["Message"] = $"Payment error: {message}";
+            }
+            else
+            {
+                TempData["Message"] = $"Unknown payment error: {response.VNPayResponseCode}";
+            }
+
+            return RedirectToAction(nameof(Confirmation));
+        }
+        public IActionResult Confirmation(int orderId)
+        {
+            ViewData["Message"] = TempData["Message"];
+            return View();
+        }
+    }
+}
+        
