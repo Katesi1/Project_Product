@@ -37,6 +37,7 @@ namespace MvcLaptop.Utils
 
             foreach (var (key, value) in _requestData.Where(kv => !string.IsNullOrEmpty(kv.Value)))
             {
+                Console.WriteLine(key + " - " + value);
                 data.Append(WebUtility.UrlEncode(key) + "=" + WebUtility.UrlEncode(value) + "&");
             }
 
@@ -48,6 +49,8 @@ namespace MvcLaptop.Utils
             {
                 signData = signData.Remove(data.Length - 1, 1);
             }
+
+            Console.WriteLine("SignData: " + signData);
 
             var vnpSecureHash = UtilityHelper.HmacSHA512(vnpHashSecret, signData);
             baseUrl += "vnp_SecureHash=" + vnpSecureHash;

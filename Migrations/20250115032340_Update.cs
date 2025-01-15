@@ -181,7 +181,7 @@ namespace MvcLaptop.Migrations
                     PaymentMethod = table.Column<string>(type: "TEXT", nullable: false),
                     OrderDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Status = table.Column<string>(type: "TEXT", nullable: true),
-                    TotalPrice = table.Column<decimal>(type: "decimal(18, 0)", nullable: false),
+                    TotalPrice = table.Column<double>(type: "decimal(18, 0)", nullable: false),
                     UserId = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>

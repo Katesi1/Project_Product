@@ -325,7 +325,7 @@ public class CartService : ICartService
 
         // Đặt giá trị cho Order
         order.OrderDate = DateTime.Now;
-        order.TotalPrice = CalculateTotalPrice(cartItems);
+        order.TotalPrice = Convert.ToDouble(CalculateTotalPrice(cartItems));
         // Thêm đơn hàng vào cơ sở dữ liệu
         _context.Orders!.Add(order);
         await _context.SaveChangesAsync();

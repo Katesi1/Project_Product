@@ -18,7 +18,9 @@ namespace MvcLaptop.Utils
         {
             var hash = new StringBuilder();
             var keyBytes = Encoding.UTF8.GetBytes(key);
+            Console.WriteLine("Key: " + key);   
             var inputBytes = Encoding.UTF8.GetBytes(inputData);
+            Console.WriteLine("Input: " + inputData);
             using (var hmac = new HMACSHA512(keyBytes))
             {
                 var hashValue = hmac.ComputeHash(inputBytes);
