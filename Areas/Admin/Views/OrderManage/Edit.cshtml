@@ -1,0 +1,44 @@
+@model MvcLaptop.Models.Order
+
+@{
+    ViewData["Title"] = "Edit Category";
+}
+
+<h2>Edit Category</h2>
+
+<h4>Category</h4>
+<hr />
+<form asp-action="Edit" method="post">
+    <input type="hidden" name="CategoryId" value="@Model.Id" />
+    <div class="form-group">
+        <label asp-for="User!.UserName" class="control-label"></label>
+        <p>@Model.User!.UserName</p>
+    </div>
+    <div class="form-group">
+        <label asp-for="TotalPrice" class="control-label"></label>
+        <p>@Model.TotalPrice</p>
+    </div>
+    <div class="form-group">
+        <label asp-for="OrderDate" class="control-label"></label>
+        <p>@Model.OrderDate</p>
+    </div>
+    <div class="form-group">
+        <label asp-for="Status" class="control-label"></label>
+        <section>
+            <option asp-for="Status" value="Đang chờ"></option>
+            <option asp-for="Status" value="Đang giao"></option>
+            <option asp-for="Status" value="Đã nhận"></option>
+            <option asp-for="Status" value="Hủy"></option>
+        </section>
+    </div>
+    @* <div class="form-group">
+        <label asp-for="Description" class="control-label"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div> *@
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Save</button>
+    </div>
+</form>
+
+<a href="@Url.Action("Index")">Back to List</a>

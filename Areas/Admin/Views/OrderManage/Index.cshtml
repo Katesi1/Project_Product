@@ -1,0 +1,41 @@
+    @model IEnumerable<MvcLaptop.Models.Order>
+
+    @{
+        ViewData["Title"] = "Order Manage";
+    }
+
+    <h2>Order Manage</h2>
+
+    @* <p>
+        <a href="@Url.Action("Create")" class="btn btn-primary">Create New order</a>
+    </p> *@
+    
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>UserName</th>
+                <th>TotalPrice</th>
+                <th>OrderDate</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelorder => order.Id)</td>
+                        <td>@Html.DisplayFor(modelorder => order.User!.UserName)</td>
+                        <td>@Html.DisplayFor(modelorder => order.TotalPrice)</td>
+                        <td>@Html.DisplayFor(modelorder => order.OrderDate)</td>
+                        <td>@Html.DisplayFor(modelorder => order.Status)</td>
+                    <td style="white-space: nowrap;">
+                        <a href="@Url.Action("Edit", new { id = order.Id })" class="btn btn-warning">Edit</a>
+                        <a href="@Url.Action("Details", new { id = order.Id })" class="btn btn-info">Details</a>
+                        <a href="@Url.Action("Delete", new { id = order.Id })" class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
